@@ -1,0 +1,68 @@
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+import os
+import gc
+
+gc.collect()
+
+import matplotlib.pyplot as plt
+from matplotlib import image
+
+datagen = ImageDataGenerator(
+        rotation_range=40,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True,
+        fill_mode='nearest')
+
+
+##########################################################################################3
+
+paths = [ "D:\itw\plant\Train\Black-grass",
+          "D:\itw\plant\Train\Charlock",
+          "D:\itw\plant\Train\Cleavers",
+          "D:\itw\plant\Train\Common Chickweed",
+          "D:\itw\plant\Train\Common wheat",
+          "D:\itw\plant\Train\Fat Hen",
+          "D:\itw\plant\Train\Loose Silky-bent",
+          "D:\itw\plant\Train\Maize",
+          "D:\itw\plant\Train\Scentless Mayweed",
+          "D:\itw\plant\Train\Shepherds Purse",
+          "D:\itw\plant\Train\Small-flowered Cranesbill",
+          "D:\itw\plant\Train\Sugar beet",
+          ]
+
+paths_new = [ "D:\itw\plant\Train2\Black-grass",
+          "D:\itw\plant\Train2\Charlock",
+          "D:\itw\plant\Train2\Cleavers",
+          "D:\itw\plant\Train2\Common Chickweed",
+          "D:\itw\plant\Train2\Common wheat",
+          "D:\itw\plant\Train2\Fat Hen",
+          "D:\itw\plant\Train2\Loose Silky-bent",
+          "D:\itw\plant\Train2\Maize",
+          "D:\itw\plant\Train2\Scentless Mayweed",
+          "D:\itw\plant\Train2\Shepherds Purse",
+          "D:\itw\plant\Train2\Small-flowered Cranesbill",
+          "D:\itw\plant\Train2\Sugar beet",
+           ]
+
+
+
+
+
+for filename in os.listdir(paths[0]):
+        img = load_img(paths[0]+"\\"+filename)
+        x = img_to_array(img)
+        x = x.reshape((1,) + x.shape)
+        i=0
+        for batch in datagen.flow(x, batch_size=1,
+                                 save_to_dir=paths_new[0], save_prefix='sample', save_format='png'):
+           i += 1
+           if i > 4:
+               break
+        del img
+        del x
+        gc.collect()
+
+print('> loaded ')
