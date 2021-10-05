@@ -1,0 +1,44 @@
+import numpy as np
+import cv2
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
+
+#data loading
+data = tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test) = data.load_data()
+
+#normalising the data
+x_train = tf.keras.utils.normalize(x_train,axis=1)
+x_test = tf.keras.utils.normalize(x_test,axis=1)
+
+
+#model defination
+model = tf.keras.models.Sequential()
+model.add(tf.keras.layers.Flatten(input_shape=(28,28)))
+model.add(tf.keras.layers.Dense(units=128,activation=tf.nn.relu))
+model.add(tf.keras.layers.Dense(units=128,activation=tf.nn.relu))
+model.add(tf.keras.layers.Dense(units=10,activation=tf.nn.softmax))
+
+model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+model.fit(x_train,y_train,epochs=2)
+
+
+#performance parrameters
+accuracy , loss = model.evaluate(x_test,y_test)
+print(accuracy)
+print(loss)
+
+#importing sample images from sample_data directory
+import os
+files = os.listdir('D:\itw\image\sample_data')
+print(files)
+
+# testing the model against images
+for x in files:
+    img = cv2.imread("sample_data/"+x)[:,:,0]
+    imgtemp = np.invert([img])
+    pridiction = model.predict(imgtemp)
+    print("result",np.argmax(pridiction))
+    plt.imshow(imgtemp[0],cmap=plt.cm.binary)
+    plt.show()
